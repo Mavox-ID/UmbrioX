@@ -1,0 +1,1 @@
+Cześć! Ta kryptowaluta została stworzona dla dzieci, dla inwestorów i wielu innych, dla ludzi, którzy naprawdę tego chcą, a wszystko jest wypłacane natychmiast na kartę bez weryfikacji! Chcesz zobaczyć kryptowalutę? Oto ona: https://umbriox.pp.ua (Uwaga, strona może nie działać, dopóki kryptowaluta nie będzie gotowa, poczekaj chwilę!)
