@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<link rel="icon" type="image/png" href="/ico.png"/>
+  <link rel="icon" type="image/png" href="/ico.png"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" type="image/png" href="/ico.png"/>
+  <title>UmbrioX (᪣UBX)</title>
+  <link rel="icon" type="image/png" href="/ico.png"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background-color: black;
+      color: white;
+      padding: 1.5rem;
+      overflow-x: hidden;
+      position: relative;
+    }
+    canvas.starfield {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+    h1 {
+      text-align: center;
+      font-size: 3rem;
+      color: #c084fc;
+    }
+    a.button {
+      display: inline-block;
+      margin: 1rem auto;
+      padding: 0.75rem 1.5rem;
+      background: linear-gradient(to right, #7e22ce, #4f46e5);
+      border-radius: 9999px;
+      color: white;
+      font-weight: bold;
+      text-decoration: none;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s;
+    }
+    a.button:hover {
+      transform: scale(1.05);
+    }
+    .card {
+      background-color: #1f2937;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin: 2rem auto;
+      max-width: 800px;
+    }
+    .price {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #4ade80;
+    }
+    .price-change {
+      font-size: 1.2rem;
+    }
+    .price-change.up {
+      color: #4ade80;
+    }
+    .price-change.down {
+      color: #f87171;
+    }
+    canvas {
+      max-width: 100%;
+      height: 300px;
+    }
+    .about {
+      background-color: #111827;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+    .galaxy-title {
+      cursor: pointer;
+      transition: all 0.5s ease;
+      background-image: linear-gradient(90deg, #7e22ce, #4f46e5, #0ea5e9, #38bdf8, #7e22ce);
+      background-size: 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+      margin-left: 0.5rem;
+    }
+    .galaxy-title:hover {
+      animation: galaxy-shimmer 4s infinite linear;
+      background-position: 200%;
+    }
+    @keyframes galaxy-shimmer {
+      0% { background-position: 0%; }
+      100% { background-position: 300%; }
+    }
+    .rocket {
+      display: inline-block;
+      transition: transform 0.4s ease, opacity 0.4s ease;
+      margin-right: 0.5rem;
+      font-size: 1.2em;
+      position: relative;
+      cursor: pointer;
+      user-select: none;
+      bottom: 0;
+      position: relative;
+      opacity: 1;
+    }
+
+    .launch-up {
+      animation: launchUp 3s ease-in forwards;
+    }
+
+    .hidden {
+      opacity: 0;
+    }
+
+    .fall-down {
+      animation: fallDown 5s ease-out forwards;
+    }
+
+    @keyframes launchUp {
+      0% { bottom: 0; opacity: 1; }
+      100% { bottom: 600px; opacity: 1; }
+    }
+
+    @keyframes fallDown {
+      0% { bottom: 600px; opacity: 0; }
+      10% { opacity: 1; }
+      100% { bottom: 0; opacity: 1; }
+    }
+
+    .title-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.25rem;
+    }
+  </style>
+</head>
+<body>
+  <canvas class="starfield"></canvas>
+  <div class="content" style="position: relative; z-index: 1;">
+    <h1>
+      <span class="title-wrapper">
+        <span class="rocket" id="rocket" title="Click to launch 🚀">🚀</span>
+        <span class="galaxy-title">UmbrioX (᪣UBX)</span>
+      </span>
+    </h1>
+    <div style="text-align: center;">
+      <a href="https://blum.codes/token/umbriox" class="button" target="_blank">🔭 View on Blum</a>
+      <br />
+      <a href="https://umbriox.pp.ua/ru/" class="button" style="margin-top: 0.5rem;" target="_self">🌐 Переключить на русский</a>
+    </div>
+    <p style="text-align: center; font-size: 1.25rem; color: #d1d5db;">
+      Welcome to UmbrioX - the cryptocurrency created by B*HD™ 🚀
+    </p>
+    <div class="card">
+      <div style="text-align: center;">
+        <h2>Current price:</h2>
+        <p id="price" class="price">Loading...</p>
+        <p id="change" class="price-change"></p>
+      </div>
+      <canvas id="chart"></canvas>
+    </div>
+    <div class="about">
+      <h2 style="color: #d8b4fe; font-size: 1.75rem;">About UmbrioX</h2>
+      <p>UmbrioX is a cryptocurrency for a new era. It was created for those who are ready to step beyond the ordinary and explore the financial horizons of the future. The symbol ᪣ represents the mystery, depth and power of the darkness of space.</p>
+      <p>Launched in 2025, UmbrioX (UBX) offers reliable and fast transactions, scalability, and protection from quantum threats.</p>
+      <p>Support the development of the UmbrioX ecosystem and join our space journey!</p>
+    </div>
+  </div>
+  <script>
+    const API_URL = "https://api.blum.codes/v1/tokens/umbriox";
+    const priceEl = document.getElementById("price");
+    const changeEl = document.getElementById("change");
+    const ctx = document.getElementById("chart").getContext("2d");
+    let chart;
+
+    async function fetchData() {
+      try {
+        const res = await fetch(API_URL);
+        const data = await res.json();
+        const prices = data.history.slice(-24).map(p => p.price);
+        const times = data.history.slice(-24).map(p => new Date(p.timestamp * 1000).toLocaleTimeString());
+        priceEl.textContent = `$${data.current_price}`;
+        changeEl.textContent = `${data.change_24h.toFixed(2)}% on 24h`;
+        changeEl.className = "price-change " + (data.change_24h >= 0 ? "up" : "down");
+        if (chart) chart.destroy();
+        chart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: times,
+            datasets: [{
+              label: "Цена",
+              data: prices,
+              borderColor: "#00ffcc",
+              borderWidth: 2,
+              fill: false,
+              pointRadius: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              x: {
+                ticks: { color: "#ccc", font: { size: 12 } },
+                grid: { display: false }
+              },
+              y: {
+                ticks: { color: "#ccc", font: { size: 12 } },
+                grid: { display: false }
+              }
+            },
+            plugins: {
+              tooltip: {
+                callbacks: {
+                  label: context => `Price: $${context.raw.toFixed(6)}`,
+                  title: context => `Time: ${context[0].label}`
+                },
+                backgroundColor: "#222",
+                titleColor: "#aaa",
+                bodyColor: "#fff"
+              },
+              legend: { display: false }
+            }
+          }
+        });
+      } catch (error) {
+        priceEl.textContent = "Error Loading";
+        console.error(error);
+      }
+    }
+
+    fetchData();
+    setInterval(fetchData, 60000);
+
+    const starCanvas = document.querySelector('.starfield');
+    const ctxStar = starCanvas.getContext('2d');
+
+    function randomRange(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    class Star {
+      constructor() {
+        this.reset(true);
+      }
+      reset(init = false) {
+        this.x = Math.random() * window.innerWidth;
+        this.y = Math.random() * window.innerHeight;
+        this.z = randomRange(0.5, 2.5);
+        this.alpha = init ? randomRange(0, 1) : 0;
+        this.alphaChange = randomRange(0.002, 0.007);
+        this.fadingIn = true;
+      }
+      update(dx, dy, gyroActive) {
+        if (gyroActive) {
+          this.x += dx * this.z;
+          this.y += dy * this.z;
+        }
+        if (this.x < 0) this.x = window.innerWidth;
+        if (this.x > window.innerWidth) this.x = 0;
+        if (this.y < 0) this.y = window.innerHeight;
+        if (this.y > window.innerHeight) this.y = 0;
+        if (this.fadingIn) {
+          this.alpha += this.alphaChange;
+          if (this.alpha >= 1) {
+            this.alpha = 1;
+            this.fadingIn = false;
+          }
+        } else {
+          this.alpha -= this.alphaChange;
+          if (this.alpha <= 0) {
+            this.alpha = 0;
+            this.reset();
+          }
+        }
+      }
+      draw(ctx) {
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
+        ctx.shadowColor = 'white';
+        ctx.shadowBlur = 4 * this.alpha;
+        ctx.arc(this.x, this.y, this.z, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+    }
+
+    const stars = [];
+    const starCount = 200;
+
+    for (let i = 0; i < starCount; i++) {
+      stars.push(new Star());
+    }
+
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+
+    function resizeStarCanvas() {
+      starCanvas.width = window.innerWidth;
+      starCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeStarCanvas);
+    resizeStarCanvas();
+
+    let gyroX = null;
+    let gyroY = null;
+    let gyroActive = false;
+    let gyroLastUpdate = Date.now();
+
+    function isGyroMoving(gx, gy) {
+      return Math.abs(gx - (gyroX ?? gx)) > 0.1 || Math.abs(gy - (gyroY ?? gy)) > 0.1;
+    }
+
+    window.addEventListener('deviceorientation', event => {
+      const gx = event.gamma || 0;
+      const gy = event.beta || 0;
+      if (gyroX === null) {
+        gyroX = gx;
+        gyroY = gy;
+        gyroActive = false;
+      } else {
+        if (isGyroMoving(gx, gy)) {
+          gyroActive = true;
+          gyroLastUpdate = Date.now();
+          gyroX = gx;
+          gyroY = gy;
+        } else {
+          if (Date.now() - gyroLastUpdate > 1500) {
+            gyroActive = false;
+          }
+        }
+      }
+      mouseX = gx * 10 + window.innerWidth / 2;
+      mouseY = gy * 10 + window.innerHeight / 2;
+    });
+
+    function animateStars() {
+      ctxStar.clearRect(0, 0, starCanvas.width, starCanvas.height);
+      const dx = (mouseX - window.innerWidth / 2) * 0.001;
+      const dy = (mouseY - window.innerHeight / 2) * 0.001;
+      stars.forEach(star => {
+        star.update(dx, dy, gyroActive || true);
+        star.draw(ctxStar);
+      });
+      requestAnimationFrame(animateStars);
+    }
+    animateStars();
+
+    document.addEventListener('mousemove', e => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    const rocket = document.getElementById('rocket');
+    let isLaunching = false;
+
+    rocket.addEventListener('click', () => {
+      if (isLaunching) return;
+      isLaunching = true;
+
+      rocket.classList.add('launch-up');
+
+      setTimeout(() => {
+        rocket.classList.remove('launch-up');
+        rocket.classList.add('hidden');
+      }, 3000);
+
+      setTimeout(() => {
+        rocket.classList.remove('hidden');
+        rocket.classList.add('fall-down');
+      }, 18000);
+
+      setTimeout(() => {
+        rocket.classList.remove('fall-down');
+        isLaunching = false;
+      }, 23000);
+    });
+  </script>
+</body>
+</html>
+
