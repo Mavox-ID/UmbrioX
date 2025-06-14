@@ -382,6 +382,35 @@
       }, 23000);
     });
   </script>
+  <div id="cookieConsent" style="
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  z-index: 10000;
+">
+  <h2>🍪 Мы используем файлы cookie!</h2>
+  <p style="max-width: 80%;">Мы используем файлы cookie, чтобы улучшить ваше космическое путешествие 🚀. Продолжая, вы соглашаетесь с нашей галактической политикой использования файлов cookie.</p>
+  <button id="agreeBtn" style="margin-top: 1em; padding: 0.5em 1.5em; font-size: 1em; border: none; border-radius: 5px; background: #9333ea; color: white; cursor: pointer;">Ок</button>
+</div>
+
+<script>
+  const cookieBox = document.getElementById('cookieConsent');
+  const agreeBtn = document.getElementById('agreeBtn');
+  if (!localStorage.getItem('cookieAccepted')) {
+    cookieBox.style.display = 'flex';
+  }
+  agreeBtn.addEventListener('click', () => {
+    localStorage.setItem('cookieAccepted', 'yes');
+    cookieBox.style.display = 'none';
+  });
+</script>
 </body>
 </html>
 

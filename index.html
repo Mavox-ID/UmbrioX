@@ -382,6 +382,35 @@
       }, 23000);
     });
   </script>
+<div id="cookieConsent" style="
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  z-index: 10000;
+">
+  <h2>🍪 We use cookies!</h2>
+  <p style="max-width: 80%;">We use cookies to enhance your space journey 🚀. By continuing, you agree to our galactic cookie policy.</p>
+  <button id="agreeBtn" style="margin-top: 1em; padding: 0.5em 1.5em; font-size: 1em; border: none; border-radius: 5px; background: #9333ea; color: white; cursor: pointer;">Agree</button>
+</div>
+
+<script>
+  const cookieBox = document.getElementById('cookieConsent');
+  const agreeBtn = document.getElementById('agreeBtn');
+  if (!localStorage.getItem('cookieAccepted')) {
+    cookieBox.style.display = 'flex';
+  }
+  agreeBtn.addEventListener('click', () => {
+    localStorage.setItem('cookieAccepted', 'yes');
+    cookieBox.style.display = 'none';
+  });
+</script>
 </body>
 </html>
 
