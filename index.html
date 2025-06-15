@@ -1,11 +1,8 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<link rel="icon" type="image/png" href="/ico.png"/>
-  <link rel="icon" type="image/png" href="/ico.png"/>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="icon" type="image/png" href="/ico.png"/>
   <title>UmbrioX (᪣UBX)</title>
   <link rel="icon" type="image/png" href="/ico.png"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -54,6 +51,8 @@
       padding: 1.5rem;
       margin: 2rem auto;
       max-width: 800px;
+      z-index: 1;
+      position: relative;
     }
     .price {
       font-size: 2rem;
@@ -69,7 +68,7 @@
     .price-change.down {
       color: #f87171;
     }
-    canvas {
+    canvas#chart {
       max-width: 100%;
       height: 300px;
     }
@@ -78,6 +77,11 @@
       border-radius: 1rem;
       padding: 1.5rem;
       margin-top: 2rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      z-index: 1;
+      position: relative;
     }
     .galaxy-title {
       cursor: pointer;
@@ -106,38 +110,69 @@
       cursor: pointer;
       user-select: none;
       bottom: 0;
-      position: relative;
       opacity: 1;
+      z-index: 2;
     }
-
     .launch-up {
       animation: launchUp 3s ease-in forwards;
     }
-
     .hidden {
       opacity: 0;
     }
-
     .fall-down {
       animation: fallDown 5s ease-out forwards;
     }
-
     @keyframes launchUp {
       0% { bottom: 0; opacity: 1; }
       100% { bottom: 600px; opacity: 1; }
     }
-
     @keyframes fallDown {
       0% { bottom: 600px; opacity: 0; }
       10% { opacity: 1; }
       100% { bottom: 0; opacity: 1; }
     }
-
     .title-wrapper {
       display: flex;
       justify-content: center;
       align-items: center;
       gap: 0.25rem;
+    }
+    #cookieConsent {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      z-index: 10000;
+      padding: 1rem;
+    }
+    #cookieConsent h2 {
+      margin-bottom: 0.5rem;
+      font-size: 2rem;
+    }
+    #cookieConsent p {
+      max-width: 80%;
+      font-size: 1.1rem;
+      line-height: 1.4;
+    }
+    #cookieConsent button {
+      margin-top: 1em;
+      padding: 0.5em 1.5em;
+      font-size: 1em;
+      border: none;
+      border-radius: 5px;
+      background: #9333ea;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    #cookieConsent button:hover {
+      background: #7e22ce;
     }
   </style>
 </head>
@@ -146,20 +181,20 @@
   <div class="content" style="position: relative; z-index: 1;">
     <h1>
       <span class="title-wrapper">
-        <span class="rocket" id="rocket" title="Click to launch 🚀">🚀</span>
+        <span class="rocket" id="rocket">🚀</span>
         <span class="galaxy-title">UmbrioX (᪣UBX)</span>
       </span>
     </h1>
     <div style="text-align: center;">
-      <a href="https://blum.codes/token/umbriox" class="button" target="_blank">🔭 View on Blum</a>
+      <a href="https://blum.codes/token/umbriox" class="button" target="_blank">🔭 Watch on Blum</a>
       <br />
-      <a href="https://umbriox.pp.ua/ru/" class="button" style="margin-top: 0.5rem;" target="_self">🌐 Переключить на русский</a>
+      <a href="https://umbriox.pp.ua/ru/" class="button" style="margin-top: 0.5rem;" target="_self">🌐 Переключить язык</a>
     </div>
     <p style="text-align: center; font-size: 1.25rem; color: #d1d5db;">
       Welcome to UmbrioX - the cryptocurrency created by B*HD™ 🚀
     </p>
-    <div class="card">
-      <div style="text-align: center;">
+        <div class="card">
+        <div style="text-align: center;">
         <h2>Current price:</h2>
         <p id="price" class="price">Loading...</p>
         <p id="change" class="price-change"></p>
@@ -167,76 +202,141 @@
       <canvas id="chart"></canvas>
     </div>
     <div class="about">
-      <h2 style="color: #d8b4fe; font-size: 1.75rem;">About UmbrioX</h2>
-      <p>UmbrioX — a cryptocurrency of a new era. It is created for those who are ready to go beyond the ordinary and explore the financial horizons of the future. The symbol ᪣ represents the mystery of this world.</p>
-      <p>Launched in 2025, UmbrioX (UBX) offers reliable and fast transactions, scalability, and protection from quantum threats.</p>
+      <h2 style="color: #d8b4fe; font-size: 1.75rem;">О UmbrioX</h2>
+      <p>UmbrioX is a cryptocurrency of a new era. It is created for those who are ready to go beyond the ordinary and explore the financial horizons of the future. The symbol ᪣ represents the mystery of this world.</p>
+      <p>UmbrioX (UBX), launched in 2025, offers reliable and fast transactions, scalability, and protection from quantum threats.</p>
       <p>Support the development of the UmbrioX ecosystem and join our space journey!</p>
-    </div>
+   </div>
   </div>
   <script>
-    const API_URL = "https://api.blum.codes/v1/tokens/umbriox";
-    const priceEl = document.getElementById("price");
-    const changeEl = document.getElementById("change");
-    const ctx = document.getElementById("chart").getContext("2d");
-    let chart;
+    const JETTON_ADDR = "EQDbgPoZT18lG0Pe3EXCMtnJyiUUM4IZZai9rQURaJh5ngRF";
+    const DEDUST_API = "https://api.dedust.io/v1/pools";
+    const TON_USD_API = "https://api.coingecko.com/api/v3/simple/price?ids=toncoin&vs_currencies=usd";
 
-    async function fetchData() {
-      try {
-        const res = await fetch(API_URL);
-        const data = await res.json();
-        const prices = data.history.slice(-24).map(p => p.price);
-        const times = data.history.slice(-24).map(p => new Date(p.timestamp * 1000).toLocaleTimeString());
-        priceEl.textContent = `$${data.current_price}`;
-        changeEl.textContent = `${data.change_24h.toFixed(2)}% on 24h`;
-        changeEl.className = "price-change " + (data.change_24h >= 0 ? "up" : "down");
-        if (chart) chart.destroy();
-        chart = new Chart(ctx, {
-          type: "line",
-          data: {
-            labels: times,
-            datasets: [{
-              label: "Цена",
-              data: prices,
-              borderColor: "#00ffcc",
-              borderWidth: 2,
-              fill: false,
-              pointRadius: 0
-            }]
-          },
-          options: {
-            responsive: true,
-            scales: {
-              x: {
-                ticks: { color: "#ccc", font: { size: 12 } },
-                grid: { display: false }
-              },
-              y: {
-                ticks: { color: "#ccc", font: { size: 12 } },
-                grid: { display: false }
-              }
-            },
-            plugins: {
-              tooltip: {
-                callbacks: {
-                  label: context => `Price: $${context.raw.toFixed(6)}`,
-                  title: context => `Time: ${context[0].label}`
-                },
-                backgroundColor: "#222",
-                titleColor: "#aaa",
-                bodyColor: "#fff"
-              },
-              legend: { display: false }
-            }
-          }
-        });
-      } catch (error) {
-        priceEl.textContent = "Error Loading";
-        console.error(error);
+    const priceElem = document.getElementById("price");
+    const changeElem = document.getElementById("change");
+    const ctx = document.getElementById('chart').getContext('2d');
+
+let chart;
+
+function initChart() {
+  chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [{
+        label: 'Price USD',
+        data: [],
+        borderColor: '#4ade80',
+        backgroundColor: 'rgba(74, 222, 128, 0.3)',
+        fill: true,
+        tension: 0.2,
+        pointRadius: 0,
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      animation: false,
+      scales: {
+        x: {
+          ticks: { color: 'white' },
+          grid: { color: 'rgba(255,255,255,0.1)' }
+        },
+        y: {
+          ticks: { color: 'white' },
+          grid: { color: 'rgba(255,255,255,0.1)' }
+        }
+      },
+      plugins: {
+        legend: { labels: { color: 'white' } }
       }
     }
+  });
+}
 
-    fetchData();
-    setInterval(fetchData, 60000);
+function updateChart(priceUsd) {
+  const now = new Date();
+  const timeLabel = now.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+
+  if (!chart) {
+    initChart();
+  }
+
+  chart.data.labels.push(timeLabel);
+  chart.data.datasets[0].data.push(priceUsd);
+
+  if (chart.data.labels.length > 24) {
+    chart.data.labels.shift();
+    chart.data.datasets[0].data.shift();
+  }
+
+  const data = chart.data.datasets[0].data;
+  if (data.length > 1) {
+    const prev = data[data.length - 2];
+    const curr = data[data.length - 1];
+    if (curr > prev) {
+      chart.data.datasets[0].borderColor = "#4ade80";
+      chart.data.datasets[0].backgroundColor = "rgba(74, 222, 128, 0.3)";
+    } else if (curr < prev) {
+      chart.data.datasets[0].borderColor = "#f87171";
+      chart.data.datasets[0].backgroundColor = "rgba(248, 113, 113, 0.3)";
+    } else {
+      chart.data.datasets[0].borderColor = "#ffffff";
+      chart.data.datasets[0].backgroundColor = "rgba(255, 255, 255, 0.3)";
+    }
+  }
+
+  chart.update();
+}
+
+async function fetchData() {
+  try {
+    const [poolsRes, tonUsdRes] = await Promise.all([
+      fetch(DEDUST_API),
+      fetch(TON_USD_API)
+    ]);
+    const pools = await poolsRes.json();
+    const tonUsdJson = await tonUsdRes.json();
+    const tonUsd = tonUsdJson.toncoin.usd;
+
+    const pool = pools.find(p =>
+      p.token0.address === JETTON_ADDR || p.token1.address === JETTON_ADDR
+    );
+    if (!pool) throw new Error("Pool not found");
+
+    const isToken0 = pool.token0.address === JETTON_ADDR;
+    const priceInTon = isToken0 ? parseFloat(pool.price0) : 1 / parseFloat(pool.price1);
+    const priceUsd = priceInTon * tonUsd;
+
+    const lastPrice = parseFloat(localStorage.getItem("lastUsdPrice")) || priceUsd;
+
+    priceElem.textContent = priceUsd.toFixed(6) + " USD";
+    if (priceUsd > lastPrice) {
+      priceElem.style.color = "#4ade80";
+    } else if (priceUsd < lastPrice) {
+      priceElem.style.color = "#f87171";
+    } else {
+      priceElem.style.color = "#ffffff";
+    }
+
+    const updated = new Date(pool.updatedAt * 1000);
+    changeElem.textContent = "Updated: " + updated.toLocaleString("ru-RU");
+
+    localStorage.setItem("lastUsdPrice", priceUsd);
+
+    updateChart(priceUsd);
+  } catch (e) {
+    priceElem.textContent = "Error loading";
+    priceElem.style.color = "#f87171";
+    changeElem.textContent = "";
+    console.error(e);
+  }
+}
+
+fetchData();
+setInterval(fetchData, 10000);
+
 
     const starCanvas = document.querySelector('.starfield');
     const ctxStar = starCanvas.getContext('2d');
@@ -357,6 +457,7 @@
       mouseY = e.clientY;
     });
 
+    // --- Ракета ---
     const rocket = document.getElementById('rocket');
     let isLaunching = false;
 
@@ -381,36 +482,17 @@
         isLaunching = false;
       }, 23000);
     });
-  </script>
-<div id="cookieConsent" style="
-  display: none;
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0, 0, 0, 0.9);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  text-align: center;
-  z-index: 10000;
-">
-  <h2>🍪 We use cookies!</h2>
-  <p style="max-width: 80%;">We use cookies to enhance your space journey 🚀. By continuing, you agree to our galactic cookie policy.</p>
-  <button id="agreeBtn" style="margin-top: 1em; padding: 0.5em 1.5em; font-size: 1em; border: none; border-radius: 5px; background: #9333ea; color: white; cursor: pointer;">Agree</button>
-</div>
 
-<script>
-  const cookieBox = document.getElementById('cookieConsent');
-  const agreeBtn = document.getElementById('agreeBtn');
-  if (!localStorage.getItem('cookieAccepted')) {
-    cookieBox.style.display = 'flex';
-  }
-  agreeBtn.addEventListener('click', () => {
-    localStorage.setItem('cookieAccepted', 'yes');
-    cookieBox.style.display = 'none';
-  });
-</script>
+    const cookieBox = document.getElementById('cookieConsent');
+    const agreeBtn = document.getElementById('agreeBtn');
+    if (!localStorage.getItem('cookieAccepted')) {
+      cookieBox.style.display = 'flex';
+    }
+    agreeBtn.addEventListener('click', () => {
+      localStorage.setItem('cookieAccepted', 'yes');
+      cookieBox.style.display = 'none';
+    });
+  </script>
 </body>
 </html>
 
