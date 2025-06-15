@@ -137,7 +137,64 @@
       align-items: center;
       gap: 0.25rem;
     }
+    /* Стили для всплывающего уведомления */
+    #priceNotification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #1a1a3d, #4f46e5);
+      color: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(79, 70, 229, 0.5);
+      max-width: 300px;
+      z-index: 1000;
+      display: none;
+      animation: slideIn 0.5s ease-out;
+    }
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    #priceNotification p {
+      margin: 0 0 1rem;
+      font-size: 0.9rem;
+    }
+    #priceNotification button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-right: 0.5rem;
+      font-weight: bold;
+    }
+    #allowBtn {
+      background: #4ade80;
+      color: #1a1a3d;
+    }
+    #closeBtn {
+      background: #f87171;
+      color: white;
+    }
   </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UmbrioX (᪣UBX) - New cryptocurrency of the future</title>
+  <meta name="description" content="UmbrioX (᪣UBX) - innovative cryptocurrency on TON. Invest in the future with fast transactions and high security. Find out the price of UBX and join!" />
+  <meta name="keywords" content="UmbrioX, ᪣, UBX, cryptocurrency, TON, investments, blockchain, DeDust" />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="B*HD™" />
+  <link rel="icon" type="image/png" href="/ico.png"/>
+  <link rel="canonical" href="https://umbriox.pp.ua/" />
+  <meta property="og:title" content="UmbrioX (UBX) - Cryptocurrency of the future" />
+  <meta property="og:description" content="Join us UmbrioX - Join UmbrioX - a new cryptocurrency on TON with low fees and high speed!" />
+  <meta property="og:image" content="https://umbriox.pp.ua/ico.png" />
+  <meta property="og:url" content="https://umbriox.pp.ua/" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="UmbrioX (᪣UBX) - Cryptocurrency of the future" />
+  <meta name="twitter:description" content="UmbrioX (᪣UBX) on TON - Invest in the future!" />
+  <meta name="twitter:image" content="https://umbriox.pp.ua/ico.png" />
 </head>
 <body>
   <canvas class="starfield"></canvas>
@@ -170,10 +227,15 @@
       <p>Support the development of the UmbrioX ecosystem and join our space journey!</p>
     </div>
   </div>
+  <div id="priceNotification">
+    <p>Stay updated with UBX price changes via notifications! Get real-time alerts when the price goes up or down.</p>
+    <button id="allowBtn">Allow</button>
+    <button id="closeBtn">Close</button>
+  </div>
   <script>
     const JETTON_ADDR = "EQDbgPoZT18lG0Pe3EXCMtnJyiUUM4IZZai9rQURaJh5ngRF";
     const DEDUST_API = "https://api.dedust.io/v1/pools";
-    const TON_USD_API = "https://tonapi.io/v2/rates?tokens=ton&currencies=usd";
+    const TON_USD_API = "https://tonapi.io/v2/rates?tokens=ton¤cies=usd";
 
     const priceElem = document.getElementById("price");
     const changeElem = document.getElementById("change");
@@ -253,50 +315,111 @@
       chart.update();
     }
 
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+      return null;
+    }
+
+    function setCookie(name, value, days) {
+      const date = new Date();
+      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+      const expires = `expires=${date.toUTCString()}`;
+      document.cookie = `${name}=${value};${expires};path=/`;
+    }
+
+    const notificationPopup = document.getElementById('priceNotification');
+    const allowBtn = document.getElementById('allowBtn');
+    const closeBtn = document.getElementById('closeBtn');
+
+    function showNotificationPopup() {
+      notificationPopup.style.display = 'block';
+    }
+
+    function hideNotificationPopup() {
+      notificationPopup.style.display = 'none';
+    }
+
+    if (!getCookie('notificationsAccepted')) {
+      let waitTime = parseInt(getCookie('notificationDelay')) || 60;
+      setTimeout(showNotificationPopup, waitTime * 1000);
+    }
+
+    allowBtn.addEventListener('click', () => {
+      hideNotificationPopup();
+      setCookie('notificationsAccepted', 'true', 365); // Не показывать 1 год
+      if ('Notification' in window && Notification.permission !== 'denied') {
+        Notification.requestPermission().then(permission => {
+          if (permission === 'granted') {
+            console.log('Notifications enabled');
+          }
+        });
+      }
+    });
+
+    closeBtn.addEventListener('click', () => {
+      hideNotificationPopup();
+      let currentDelay = parseInt(getCookie('notificationDelay')) || 60;
+      currentDelay += 300; // +5 минут (300 сек)
+      setCookie('notificationDelay', currentDelay, 365);
+    });
+
     async function fetchData() {
       try {
-        const [poolsRes, tonUsdRes] = await Promise.all([
-          fetch(DEDUST_API),
-          fetch(TON_USD_API)
-        ]);
-
-        if (!poolsRes.ok) {
-          throw new Error(`Error API DeDust: ${poolsRes.status}`);
+        // Запрос к DeDust API
+        const dedustRes = await fetch(DEDUST_API);
+        console.log("Status DeDust API:", dedustRes.status);
+        if (!dedustRes.ok) {
+          throw new Error(`Error API DeDust: ${dedustRes.status}`);
         }
+
+        const pools = await dedustRes.json();
+        console.log("Data on DeDust:", pools);
+
+        // Поиск пула с JETTON_ADDR
+        const pool = pools.find(p => 
+          p.token0.address === JETTON_ADDR || p.token1.address === JETTON_ADDR
+        );
+        if (!pool) {
+          throw new Error("Pool not found");
+        }
+        console.log("Search pool OK:", pool);
+
+        const tonUsdRes = await fetch(TON_USD_API);
+        console.log("Статус tonapi.io:", tonUsdRes.status);
         if (!tonUsdRes.ok) {
           throw new Error(`Error API tonapi.io: ${tonUsdRes.status}`);
         }
 
-        const pools = await poolsRes.json();
-        console.log("Пулы от DeDust:", pools);
-
-        if (!Array.isArray(pools)) {
-          throw new Error("Data from DeDust No got a massive");
-        }
-
         const tonUsdJson = await tonUsdRes.json();
+        console.log("Data on tonapi.io:", tonUsdJson);
 
         if (!tonUsdJson.rates || !tonUsdJson.rates.TON || !tonUsdJson.rates.TON.prices.USD) {
           throw new Error("Error data from tonapi.io");
         }
         const tonUsd = tonUsdJson.rates.TON.prices.USD;
 
-        const pool = pools.find(p => {
-          return p && p.token0 && p.token1 && 
-                 (p.token0.address === JETTON_ADDR || p.token1.address === JETTON_ADDR);
-        });
-        if (!pool) throw new Error("Pool not found");
-        console.log("Найденный пул:", pool);
-
         const isToken0 = pool.token0.address === JETTON_ADDR;
         const priceInTon = isToken0 ? parseFloat(pool.price0) : 1 / parseFloat(pool.price1 || 1);
         if (isNaN(priceInTon) || !isFinite(priceInTon)) {
-          throw new Error("Неверная цена пула");
+          throw new Error("Incorrect pool price");
         }
         const priceUsd = priceInTon * tonUsd;
 
-        priceElem.textContent = priceUsd.toFixed(6) + " USD";
         const lastPrice = parseFloat(localStorage.getItem("lastUsdPrice")) || priceUsd;
+
+        if (getCookie('notificationsAccepted') === 'true' && lastPrice !== priceUsd && 'Notification' in window && Notification.permission === 'granted') {
+          const changeUsd = priceUsd - lastPrice;
+          const changePercent = ((priceUsd - lastPrice) / lastPrice * 100).toFixed(2);
+          const direction = changeUsd > 0 ? '+' : '';
+          new Notification('UBX Price Update', {
+            body: `Current: $${priceUsd.toFixed(6)}\nPrevious: $${lastPrice.toFixed(6)}\nChange: ${direction}$${Math.abs(changeUsd).toFixed(6)} (${direction}${changePercent}%)`,
+            icon: '/ico.png'
+          });
+        }
+
+        priceElem.textContent = priceUsd.toFixed(6) + " USD";
 
         if (priceUsd > lastPrice) {
           priceElem.style.color = "#4ade80";
@@ -323,7 +446,7 @@
     fetchData();
     setInterval(fetchData, 10000);
 
-    // --- Анимация звезд ---
+    // --- Animation Star ---
     const starCanvas = document.querySelector('.starfield');
     const ctxStar = starCanvas.getContext('2d');
 
