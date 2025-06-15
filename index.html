@@ -137,43 +137,6 @@
       align-items: center;
       gap: 0.25rem;
     }
-    #cookieConsent {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.9);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      text-align: center;
-      z-index: 10000;
-      padding: 1rem;
-    }
-    #cookieConsent h2 {
-      margin-bottom: 0.5rem;
-      font-size: 2rem;
-    }
-    #cookieConsent p {
-      max-width: 80%;
-      font-size: 1.1rem;
-      line-height: 1.4;
-    }
-    #cookieConsent button {
-      margin-top: 1em;
-      padding: 0.5em 1.5em;
-      font-size: 1em;
-      border: none;
-      border-radius: 5px;
-      background: #9333ea;
-      color: white;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    #cookieConsent button:hover {
-      background: #7e22ce;
-    }
   </style>
 </head>
 <body>
@@ -187,13 +150,14 @@
     </h1>
     <div style="text-align: center;">
       <a href="https://blum.codes/token/umbriox" class="button" target="_blank">🔭 Watch on Blum</a>
-      <br/>
+      <br />
+      <a href="https://umbriox.pp.ua/ru/" class="button" style="margin-top: 0.5rem;" target="_self">🌐 Переключить язык</a>
     </div>
     <p style="text-align: center; font-size: 1.25rem; color: #d1d5db;">
       Welcome to UmbrioX - the cryptocurrency created by B*HD™ 🚀
     </p>
-        <div class="card">
-        <div style="text-align: center;">
+    <div class="card">
+      <div style="text-align: center;">
         <h2>Current price:</h2>
         <p id="price" class="price">Loading...</p>
         <p id="change" class="price-change"></p>
@@ -205,138 +169,162 @@
       <p>UmbrioX is a cryptocurrency of a new era. It is created for those who are ready to go beyond the ordinary and explore the financial horizons of the future. The symbol ᪣ represents the mystery of this world.</p>
       <p>UmbrioX (UBX), launched in 2025, offers reliable and fast transactions, scalability, and protection from quantum threats.</p>
       <p>Support the development of the UmbrioX ecosystem and join our space journey!</p>
-   </div>
+    </div>
   </div>
   <script>
     const JETTON_ADDR = "EQDbgPoZT18lG0Pe3EXCMtnJyiUUM4IZZai9rQURaJh5ngRF";
     const DEDUST_API = "https://api.dedust.io/v1/pools";
-    const TON_USD_API = "https://api.coingecko.com/api/v3/simple/price?ids=the-open-network&vs_currencies=usd";
+    const TON_USD_API = "https://tonapi.io/v2/rates?tokens=ton&currencies=usd";
 
     const priceElem = document.getElementById("price");
     const changeElem = document.getElementById("change");
     const ctx = document.getElementById('chart').getContext('2d');
 
-let chart;
+    let chart;
 
-function initChart() {
-  chart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: [],
-      datasets: [{
-        label: 'Price USD',
-        data: [],
-        borderColor: '#4ade80',
-        backgroundColor: 'rgba(74, 222, 128, 0.3)',
-        fill: true,
-        tension: 0.2,
-        pointRadius: 0,
-        borderWidth: 2
-      }]
-    },
-    options: {
-      responsive: true,
-      animation: false,
-      scales: {
-        x: {
-          ticks: { color: 'white' },
-          grid: { color: 'rgba(255,255,255,0.1)' }
+    function initChart() {
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [{
+            label: 'Price USD',
+            data: [],
+            borderColor: '#4ade80',
+            backgroundColor: 'rgba(74, 222, 128, 0.3)',
+            fill: true,
+            tension: 0.2,
+            pointRadius: 0,
+            borderWidth: 2
+          }]
         },
-        y: {
-          ticks: { color: 'white' },
-          grid: { color: 'rgba(255,255,255,0.1)' }
+        options: {
+          responsive: true,
+          animation: false,
+          scales: {
+            x: {
+              ticks: { color: 'white' },
+              grid: { color: 'rgba(255,255,255,0.1)' }
+            },
+            y: {
+              ticks: { color: 'white' },
+              grid: { color: 'rgba(255,255,255,0.1)' }
+            }
+          },
+          plugins: {
+            legend: { labels: { color: 'white' } }
+          }
         }
-      },
-      plugins: {
-        legend: { labels: { color: 'white' } }
+      });
+    }
+
+    function updateChart(priceUsd) {
+      console.log("Chart updated with price:", priceUsd);
+      const now = new Date();
+      const timeLabel = now.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+
+      if (!chart) {
+        initChart();
+      }
+
+      chart.data.labels.push(timeLabel);
+      chart.data.datasets[0].data.push(priceUsd);
+
+      if (chart.data.labels.length > 24) {
+        chart.data.labels.shift();
+        chart.data.datasets[0].data.shift();
+      }
+
+      const data = chart.data.datasets[0].data;
+      if (data.length > 1) {
+        const prev = data[data.length - 2];
+        const curr = data[data.length - 1];
+        if (curr > prev) {
+          chart.data.datasets[0].borderColor = "#4ade80";
+          chart.data.datasets[0].backgroundColor = "rgba(74, 222, 128, 0.3)";
+        } else if (curr < prev) {
+          chart.data.datasets[0].borderColor = "#f87171";
+          chart.data.datasets[0].backgroundColor = "rgba(248, 113, 113, 0.3)";
+        } else {
+          chart.data.datasets[0].borderColor = "#ffffff";
+          chart.data.datasets[0].backgroundColor = "rgba(255, 255, 255, 0.3)";
+        }
+      }
+
+      chart.update();
+    }
+
+    async function fetchData() {
+      try {
+        const [poolsRes, tonUsdRes] = await Promise.all([
+          fetch(DEDUST_API),
+          fetch(TON_USD_API)
+        ]);
+
+        if (!poolsRes.ok) {
+          throw new Error(`Error API DeDust: ${poolsRes.status}`);
+        }
+        if (!tonUsdRes.ok) {
+          throw new Error(`Error API tonapi.io: ${tonUsdRes.status}`);
+        }
+
+        const pools = await poolsRes.json();
+        console.log("Пулы от DeDust:", pools);
+
+        if (!Array.isArray(pools)) {
+          throw new Error("Data from DeDust No got a massive");
+        }
+
+        const tonUsdJson = await tonUsdRes.json();
+
+        if (!tonUsdJson.rates || !tonUsdJson.rates.TON || !tonUsdJson.rates.TON.prices.USD) {
+          throw new Error("Error data from tonapi.io");
+        }
+        const tonUsd = tonUsdJson.rates.TON.prices.USD;
+
+        const pool = pools.find(p => {
+          return p && p.token0 && p.token1 && 
+                 (p.token0.address === JETTON_ADDR || p.token1.address === JETTON_ADDR);
+        });
+        if (!pool) throw new Error("Pool not found");
+        console.log("Найденный пул:", pool);
+
+        const isToken0 = pool.token0.address === JETTON_ADDR;
+        const priceInTon = isToken0 ? parseFloat(pool.price0) : 1 / parseFloat(pool.price1 || 1);
+        if (isNaN(priceInTon) || !isFinite(priceInTon)) {
+          throw new Error("Неверная цена пула");
+        }
+        const priceUsd = priceInTon * tonUsd;
+
+        priceElem.textContent = priceUsd.toFixed(6) + " USD";
+        const lastPrice = parseFloat(localStorage.getItem("lastUsdPrice")) || priceUsd;
+
+        if (priceUsd > lastPrice) {
+          priceElem.style.color = "#4ade80";
+        } else if (priceUsd < lastPrice) {
+          priceElem.style.color = "#f87171";
+        } else {
+          priceElem.style.color = "#ffffff";
+        }
+
+        const updated = pool.updatedAt ? new Date(pool.updatedAt * 1000) : new Date();
+        changeElem.textContent = "Updated: " + updated.toLocaleString("ru-RU");
+
+        localStorage.setItem("lastUsdPrice", priceUsd);
+
+        updateChart(priceUsd);
+      } catch (e) {
+        priceElem.textContent = "Error loading";
+        priceElem.style.color = "#f87171";
+        changeElem.textContent = "";
+        console.error("Ошибка в fetchData:", e);
       }
     }
-  });
-}
 
-function updateChart(priceUsd) {
-  const now = new Date();
-  const timeLabel = now.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+    fetchData();
+    setInterval(fetchData, 10000);
 
-  if (!chart) {
-    initChart();
-  }
-
-  chart.data.labels.push(timeLabel);
-  chart.data.datasets[0].data.push(priceUsd);
-
-  if (chart.data.labels.length > 24) {
-    chart.data.labels.shift();
-    chart.data.datasets[0].data.shift();
-  }
-
-  const data = chart.data.datasets[0].data;
-  if (data.length > 1) {
-    const prev = data[data.length - 2];
-    const curr = data[data.length - 1];
-    if (curr > prev) {
-      chart.data.datasets[0].borderColor = "#4ade80";
-      chart.data.datasets[0].backgroundColor = "rgba(74, 222, 128, 0.3)";
-    } else if (curr < prev) {
-      chart.data.datasets[0].borderColor = "#f87171";
-      chart.data.datasets[0].backgroundColor = "rgba(248, 113, 113, 0.3)";
-    } else {
-      chart.data.datasets[0].borderColor = "#ffffff";
-      chart.data.datasets[0].backgroundColor = "rgba(255, 255, 255, 0.3)";
-    }
-  }
-
-  chart.update();
-}
-
-async function fetchData() {
-  try {
-    const [poolsRes, tonUsdRes] = await Promise.all([
-      fetch(DEDUST_API),
-      fetch(TON_USD_API)
-    ]);
-    const pools = await poolsRes.json();
-    const tonUsdJson = await tonUsdRes.json();
-    const tonUsd = tonUsdJson["the-open-network"].usd;
-
-    const pool = pools.find(p =>
-      p.token0.address === JETTON_ADDR || p.token1.address === JETTON_ADDR
-    );
-    if (!pool) throw new Error("Pool not found");
-
-    const isToken0 = pool.token0.address === JETTON_ADDR;
-    const priceInTon = isToken0 ? parseFloat(pool.price0) : 1 / parseFloat(pool.price1);
-    const priceUsd = priceInTon * tonUsd;
-
-    const lastPrice = parseFloat(localStorage.getItem("lastUsdPrice")) || priceUsd;
-
-    priceElem.textContent = priceUsd.toFixed(6) + " USD";
-    if (priceUsd > lastPrice) {
-      priceElem.style.color = "#4ade80";
-    } else if (priceUsd < lastPrice) {
-      priceElem.style.color = "#f87171";
-    } else {
-      priceElem.style.color = "#ffffff";
-    }
-
-    const updated = new Date(pool.updatedAt * 1000);
-    changeElem.textContent = "Updated: " + updated.toLocaleString("ru-RU");
-
-    localStorage.setItem("lastUsdPrice", priceUsd);
-
-    updateChart(priceUsd);
-  } catch (e) {
-    priceElem.textContent = "Error loading";
-    priceElem.style.color = "#f87171";
-    changeElem.textContent = "";
-    console.error(e);
-  }
-}
-
-fetchData();
-setInterval(fetchData, 10000);
-
-
+    // --- Анимация звезд ---
     const starCanvas = document.querySelector('.starfield');
     const ctxStar = starCanvas.getContext('2d');
 
@@ -456,6 +444,7 @@ setInterval(fetchData, 10000);
       mouseY = e.clientY;
     });
 
+    // --- Ракета ---
     const rocket = document.getElementById('rocket');
     let isLaunching = false;
 
@@ -483,4 +472,3 @@ setInterval(fetchData, 10000);
   </script>
 </body>
 </html>
-
