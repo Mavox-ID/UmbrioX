@@ -211,7 +211,7 @@
   <script>
     const JETTON_ADDR = "EQDbgPoZT18lG0Pe3EXCMtnJyiUUM4IZZai9rQURaJh5ngRF";
     const DEDUST_API = "https://api.dedust.io/v1/pools";
-    const TON_USD_API = "https://api.coingecko.com/api/v3/simple/price?ids=toncoin&vs_currencies=usd";
+    const TON_USD_API = "https://api.coingecko.com/api/v3/simple/price?ids=the-open-network&vs_currencies=usd";
 
     const priceElem = document.getElementById("price");
     const changeElem = document.getElementById("change");
@@ -298,7 +298,7 @@ async function fetchData() {
     ]);
     const pools = await poolsRes.json();
     const tonUsdJson = await tonUsdRes.json();
-    const tonUsd = tonUsdJson.toncoin.usd;
+    const tonUsd = tonUsdJson["the-open-network"].usd;
 
     const pool = pools.find(p =>
       p.token0.address === JETTON_ADDR || p.token1.address === JETTON_ADDR
@@ -457,7 +457,6 @@ setInterval(fetchData, 10000);
       mouseY = e.clientY;
     });
 
-    // --- Ракета ---
     const rocket = document.getElementById('rocket');
     let isLaunching = false;
 
@@ -481,16 +480,6 @@ setInterval(fetchData, 10000);
         rocket.classList.remove('fall-down');
         isLaunching = false;
       }, 23000);
-    });
-
-    const cookieBox = document.getElementById('cookieConsent');
-    const agreeBtn = document.getElementById('agreeBtn');
-    if (!localStorage.getItem('cookieAccepted')) {
-      cookieBox.style.display = 'flex';
-    }
-    agreeBtn.addEventListener('click', () => {
-      localStorage.setItem('cookieAccepted', 'yes');
-      cookieBox.style.display = 'none';
     });
   </script>
 </body>
