@@ -92,9 +92,47 @@
       font-size: 1.2rem;
       text-shadow: 0 0 5px rgba(255, 165, 0, 0.3);
     }
+    .marquee-container { /Release
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 10;
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.marquee {
+  display: inline-block;
+  white-space: nowrap;
+  font-size: 1.5rem;
+  font-weight: bold;
+  background-image: linear-gradient(90deg, #7e22ce, #4f46e5, #0ea5e9, #38bdf8, #7e22ce);
+  background-size: 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: galaxy-shimmer 4s infinite linear, marquee 15s linear infinite;
+  padding-right: 100%;
+}
+
+
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+} /* Release
   </style>
 </head>
 <body>
+<div class="marquee-container">
+  <span class="marquee">UmbrioX token release was successful! Do you want to help us yet? This is a very big story about you if you do it!</span>
+</div>
   <canvas class="starfield"></canvas>
   <h1>Token Burn System</h1>
   <div class="card">

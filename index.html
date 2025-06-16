@@ -176,6 +176,42 @@
       background: #f87171;
       color: white;
     }
+    
+.marquee-container { /Release
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 10;
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.marquee {
+  display: inline-block;
+  white-space: nowrap;
+  font-size: 1.5rem;
+  font-weight: bold;
+  background-image: linear-gradient(90deg, #7e22ce, #4f46e5, #0ea5e9, #38bdf8, #7e22ce);
+  background-size: 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: galaxy-shimmer 4s infinite linear, marquee 15s linear infinite;
+  padding-right: 100%;
+}
+
+
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+} /* Release
   </style>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -197,6 +233,9 @@
   <meta name="twitter:image" content="https://umbriox.pp.ua/ico.png" />
 </head>
 <body>
+<div class="marquee-container">
+  <span class="marquee">UmbrioX token release was successful! Use cryptocurrency to its full potential!</span>
+</div>
   <canvas class="starfield"></canvas>
   <div class="content" style="position: relative; z-index: 1;">
     <h1>
@@ -208,6 +247,7 @@
     <div style="text-align: center;">
       <a href="https://blum.codes/token/umbriox" class="button" target="_blank">🔭 Watch on Blum</a>
       <a href="https://umbriox.pp.ua/tbs/" class="button" target="_blank">🔥 Burn TON token</a>
+      <a href="https://umbriox.pp.ua/a/" class="button" target="_blank">🔰 Creators</a>
       <br/>
     </div>
     <p style="text-align: center; font-size: 1.25rem; color: #d1d5db;">

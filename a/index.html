@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Creators - UmbrioX</title>
+  <link rel="icon" type="image/png" href="/ico.png"/>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background-color: black;
+      color: white;
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      height: 100vh;
+    }
+    canvas.starfield {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .galaxy-title {
+      cursor: pointer;
+      transition: all 0.5s ease;
+      background-image: linear-gradient(90deg, #7e22ce, #4f46e5, #0ea5e9, #38bdf8, #7e22ce);
+      background-size: 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+      animation: galaxy-shimmer 4s infinite linear;
+    }
+    @keyframes galaxy-shimmer {
+      0% { background-position: 0%; }
+      100% { background-position: 300%; }
+    }
+    /* Стили для титров */
+    .credits-container {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      animation: showCredits 0s linear 1s forwards;
+    }
+    .credits {
+      position: relative;
+      animation: scrollCredits 15s linear 1s forwards, fadeOutCredits 3s linear 21s forwards;
+    }
+    .credits h2 {
+      font-size: 2rem;
+      margin: 2rem 0;
+      text-shadow: 0 0 10px rgba(192, 132, 252, 0.7);
+    }
+    .credits p {
+      font-size: 1.5rem;
+      margin: 0.5rem 0;
+      color: #d1d5db;
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    }
+    @keyframes showCredits {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    @keyframes scrollCredits {
+      0% { transform: translateY(100vh); }
+      100% { transform: translateY(0); }
+    }
+    @keyframes fadeOutCredits {
+      0% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    .thank-you {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2.5rem;
+      text-align: center;
+      opacity: 0;
+      z-index: 2;
+      animation: showThankYou 7s linear 24s forwards, fadeOutThankYou 2s linear 31s forwards;
+    }
+    @keyframes showThankYou {
+      0% { opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    @keyframes fadeOutThankYou {
+      0% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <canvas class="starfield"></canvas>
+  <div class="credits-container">
+    <div class="credits">
+      <h2 class="galaxy-title">UmbrioX (᪣UBX)</h2>
+      <p>Created by B*HD™</p>
+      <p>Coder: Goncharov Nikita, Tkachenko Sergey</p>
+      <p>Design by Somik Misha, Kiselev Trofim, Yudin Leon</p>
+      <p>Developer: Vinogradov Philip, Chervony Leon</p>
+      <p>Buguser: Ostrozhsky Khariton, Martynov Jan</p>
+      <h2 class="galaxy-title">Special Thanks</h2>
+      <p>Community Support: UmbrioX Chat</p>
+      <p>Thanks for your support: Bogachov Artem</p>
+      <p>Sponsors: Bogachov Artem, Somik Misha, Goncharov Nikita, Yudin Leon</p>
+      <p>Partners: TON Network, Blum, DeDust, tonapi.io, API.Service, Workers, TBS.Service</p>
+      <p>Inspiration: ETH</p>
+      <p>Idea: FPI Bank</p>
+    </div>
+  </div>
+  <div class="thank-you galaxy-title">
+    Thank you for participating!<br>We appreciate it!
+  </div>
+  <script>
+    const starCanvas = document.querySelector('.starfield');
+    const ctxStar = starCanvas.getContext('2d');
+
+    function randomRange(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    class Star {
+      constructor() {
+        this.reset(true);
+      }
+      reset(init = false) {
+        this.x = Math.random() * window.innerWidth;
+        this.y = Math.random() * window.innerHeight;
+        this.z = randomRange(0.5, 2.5);
+        this.alpha = init ? randomRange(0, 1) : 0;
+        this.alphaChange = randomRange(0.002, 0.007);
+        this.fadingIn = true;
+      }
+      update(dx, dy, gyroActive) {
+        if (gyroActive) {
+          this.x += dx * this.z;
+          this.y += dy * this.z;
+        }
+        if (this.x < 0) this.x = window.innerWidth;
+        if (this.x > window.innerWidth) this.x = 0;
+        if (this.y < 0) this.y = window.innerHeight;
+        if (this.y > window.innerHeight) this.y = 0;
+        if (this.fadingIn) {
+          this.alpha += this.alphaChange;
+          if (this.alpha >= 1) {
+            this.alpha = 1;
+            this.fadingIn = false;
+          }
+        } else {
+          this.alpha -= this.alphaChange;
+          if (this.alpha <= 0) {
+            this.alpha = 0;
+            this.reset();
+          }
+        }
+      }
+      draw(ctx) {
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
+        ctx.shadowColor = 'white';
+        ctx.shadowBlur = 4 * this.alpha;
+        ctx.arc(this.x, this.y, this.z, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+    }
+
+    const stars = [];
+    const starCount = 200;
+
+    for (let i = 0; i < starCount; i++) {
+      stars.push(new Star());
+    }
+
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let gyroX = null;
+    let gyroY = null;
+    let gyroActive = false;
+    let gyroLastUpdate = Date.now();
+
+    function isGyroMoving(gx, gy) {
+      return Math.abs(gx - (gyroX ?? gx)) > 0.1 || Math.abs(gy - (gyroY ?? gy)) > 0.1;
+    }
+
+    window.addEventListener('deviceorientation', event => {
+      const gx = event.gamma || 0;
+      const gy = event.beta || 0;
+      if (gyroX === null) {
+        gyroX = gx;
+        gyroY = gy;
+        gyroActive = false;
+      } else {
+        if (isGyroMoving(gx, gy)) {
+          gyroActive = true;
+          gyroLastUpdate = Date.now();
+          gyroX = gx;
+          gyroY = gy;
+        } else {
+          if (Date.now() - gyroLastUpdate > 1500) {
+            gyroActive = false;
+          }
+        }
+      }
+      mouseX = gx * 10 + window.innerWidth / 2;
+      mouseY = gy * 10 + window.innerHeight / 2;
+    });
+
+    document.addEventListener('mousemove', e => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    function resizeStarCanvas() {
+      starCanvas.width = window.innerWidth;
+      starCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeStarCanvas);
+    resizeStarCanvas();
+
+    function animateStars() {
+      ctxStar.clearRect(0, 0, starCanvas.width, starCanvas.height);
+      const dx = (mouseX - window.innerWidth / 2) * 0.001;
+      const dy = (mouseY - window.innerHeight / 2) * 0.001;
+      stars.forEach(star => {
+        star.update(dx, dy, gyroActive || true);
+        star.draw(ctxStar);
+      });
+      requestAnimationFrame(animateStars);
+    }
+    animateStars();
+
+    setTimeout(() => {
+      window.location.href = 'https://umbriox.pp.ua/';
+    }, 35000);
+  </script>
+</body>
+</html>

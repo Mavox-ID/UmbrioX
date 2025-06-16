@@ -136,12 +136,48 @@
     height: 220px;
     margin: 0 auto;
   }
+      .marquee-container { /Release
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 10;
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.marquee {
+  display: inline-block;
+  white-space: nowrap;
+  font-size: 1.5rem;
+  font-weight: bold;
+  background-image: linear-gradient(90deg, #7e22ce, #4f46e5, #0ea5e9, #38bdf8, #7e22ce);
+  background-size: 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: galaxy-shimmer 4s infinite linear, marquee 15s linear infinite;
+  padding-right: 100%;
+}
+
+
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+} /* Release
 </style>
 </head>
 <body>
-
+<div class="marquee-container">
+  <span class="marquee">Oh, that's a mistake, well try something else</span>
+</div>
 <div class="container" role="main" aria-label="404 Error page">
-
   <div class="text-top" aria-label="English explanation">
     You accidentally put the wrong sign after the link, you can go to (the English version of the site or update) below
   </div>
@@ -157,6 +193,8 @@
 
   <div class="btn-group">
     <button class="btn" onclick="window.location.href='https://umbriox.pp.ua/'" aria-label="Go to English version">Return to site (EN)</button>
+    <button class="btn" onclick="window.location.href='https://umbriox.pp.ua/tbs/'" aria-label="TBS">Burn a TON!</button>
+    <button class="btn" onclick="window.location.href='https://umbriox.pp.ua/a/'" aria-label="Creators">Creators</button>
     <button class="btn" onclick="location.reload()" aria-label="Update Site">Update site</button>
   </div>
 </div>
