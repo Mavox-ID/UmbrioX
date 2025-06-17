@@ -2,7 +2,7 @@ cmd 568
 cmd start
 cmd start ssh
 cmd start reqwes
-cdm block shh
+cmd block shh
 cmd block ssh
 cmd start block
 cmd start blockc

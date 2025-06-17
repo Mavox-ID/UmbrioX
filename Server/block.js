@@ -13,7 +13,6 @@ nano server.js
 395828956728369342<reqwes>
 
 https://umbriox.pp.ua/
-https://umbriox.pp.ua/ru/
 
 </reqwes>
 
