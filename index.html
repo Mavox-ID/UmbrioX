@@ -137,7 +137,6 @@
       align-items: center;
       gap: 0.25rem;
     }
-    /* Стили для всплывающего уведомления */
     #priceNotification {
       position: fixed;
       bottom: 20px;
@@ -454,10 +453,6 @@
           const changeUsd = priceUsd - lastPrice;
           const changePercent = ((priceUsd - lastPrice) / lastPrice * 100).toFixed(2);
           const direction = changeUsd > 0 ? '+' : '';
-          new Notification('UBX Price Update', {
-            body: `Current: $${priceUsd.toFixed(6)}\nPrevious: $${lastPrice.toFixed(6)}\nChange: ${direction}$${Math.abs(changeUsd).toFixed(6)} (${direction}${changePercent}%)`,
-            icon: '/ico.png'
-          });
         }
 
         priceElem.textContent = priceUsd.toFixed(6) + " USD";
@@ -480,7 +475,7 @@
         priceElem.textContent = "Error loading";
         priceElem.style.color = "#f87171";
         changeElem.textContent = "";
-        console.error("Ошибка в fetchData:", e);
+        console.error("Error in fetchData:", e);
       }
     }
 
@@ -684,5 +679,8 @@
     });
   });
 </script>
+  <!-- Firebase Core и Messaging -->
+<script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-messaging-compat.js"></script>
 </body>
 </html>
