@@ -137,7 +137,6 @@
       align-items: center;
       gap: 0.25rem;
     }
-    /* Стили для всплывающего уведомления */
     #priceNotification {
       position: fixed;
       bottom: 20px;
@@ -276,7 +275,7 @@
   <script>
     const JETTON_ADDR = "EQDbgPoZT18lG0Pe3EXCMtnJyiUUM4IZZai9rQURaJh5ngRF";
     const DEDUST_API = "https://api.dedust.io/v1/pools";
-    const TON_USD_API = "https://tonapi.io/v2/rates?tokens=ton¤cies=usd";
+    const TON_USD_API = "https://tonapi.io/v2/rates?tokens=ton&currencies=usd";
 
     const priceElem = document.getElementById("price");
     const changeElem = document.getElementById("change");
@@ -389,7 +388,7 @@
 
     allowBtn.addEventListener('click', () => {
       hideNotificationPopup();
-      setCookie('notificationsAccepted', 'true', 365); // Не показывать 1 год
+      setCookie('notificationsAccepted', 'true', 365);
       if ('Notification' in window && Notification.permission !== 'denied') {
         Notification.requestPermission().then(permission => {
           if (permission === 'granted') {
@@ -402,13 +401,13 @@
     closeBtn.addEventListener('click', () => {
       hideNotificationPopup();
       let currentDelay = parseInt(getCookie('notificationDelay')) || 60;
-      currentDelay += 300; // +5 минут (300 сек)
+      currentDelay += 300;
       setCookie('notificationDelay', currentDelay, 365);
     });
 
     async function fetchData() {
       try {
-        // Запрос к DeDust API
+        // HTTP in DeDust API
         const dedustRes = await fetch(DEDUST_API);
         console.log("Status DeDust API:", dedustRes.status);
         if (!dedustRes.ok) {
@@ -418,7 +417,7 @@
         const pools = await dedustRes.json();
         console.log("Data on DeDust:", pools);
 
-        // Поиск пула с JETTON_ADDR
+        // Search in JETTON_ADDR
         const pool = pools.find(p => 
           p.token0.address === JETTON_ADDR || p.token1.address === JETTON_ADDR
         );
@@ -428,7 +427,7 @@
         console.log("Search pool OK:", pool);
 
         const tonUsdRes = await fetch(TON_USD_API);
-        console.log("Статус tonapi.io:", tonUsdRes.status);
+        console.log("Status tonapi.io:", tonUsdRes.status);
         if (!tonUsdRes.ok) {
           throw new Error(Error API tonapi.io: ${tonUsdRes.status});
         }
@@ -607,7 +606,7 @@
       mouseY = e.clientY;
     });
 
-    // --- Ракета ---
+    // --- Rocket ---
     const rocket = document.getElementById('rocket');
     let isLaunching = false;
 
