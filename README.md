@@ -41,7 +41,7 @@ Want to help? Here's how:
 ---
 
 ## ⚠️ License
-This project is distributed under the [BW Licence](https://github.com/Mavox-ID/UmbrioX/blob/main/LICENSE) Don't copy what you can't!
+This project is distributed under the [BW Licence](https://github.com/Mavox-ID/UmbrioX/blob/main/LICENCE) Don't copy what you can't!
 
 ---
 
