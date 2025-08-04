@@ -137,6 +137,7 @@
       align-items: center;
       gap: 0.25rem;
     }
+    /* Стили для всплывающего уведомления */
     #priceNotification {
       position: fixed;
       bottom: 20px;
@@ -275,7 +276,7 @@
   <script>
     const JETTON_ADDR = "EQDbgPoZT18lG0Pe3EXCMtnJyiUUM4IZZai9rQURaJh5ngRF";
     const DEDUST_API = "https://api.dedust.io/v1/pools";
-    const TON_USD_API = "https://tonapi.io/v2/rates?tokens=ton&currencies=usd";
+    const TON_USD_API = "https://tonapi.io/v2/rates?tokens=ton¤cies=usd";
 
     const priceElem = document.getElementById("price");
     const changeElem = document.getElementById("change");
@@ -356,8 +357,8 @@
     }
 
     function getCookie(name) {
-      const value = `; ${document.cookie}`;
-      const parts = value.split(`; ${name}=`);
+      const value = ; ${document.cookie};
+      const parts = value.split(; ${name}=);
       if (parts.length === 2) return parts.pop().split(';').shift();
       return null;
     }
@@ -365,8 +366,8 @@
     function setCookie(name, value, days) {
       const date = new Date();
       date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-      const expires = `expires=${date.toUTCString()}`;
-      document.cookie = `${name}=${value};${expires};path=/`;
+      const expires = expires=${date.toUTCString()};
+      document.cookie = ${name}=${value};${expires};path=/;
     }
 
     const notificationPopup = document.getElementById('priceNotification');
@@ -411,7 +412,7 @@
         const dedustRes = await fetch(DEDUST_API);
         console.log("Status DeDust API:", dedustRes.status);
         if (!dedustRes.ok) {
-          throw new Error(`Error API DeDust: ${dedustRes.status}`);
+          throw new Error(Error API DeDust: ${dedustRes.status});
         }
 
         const pools = await dedustRes.json();
@@ -429,7 +430,7 @@
         const tonUsdRes = await fetch(TON_USD_API);
         console.log("Статус tonapi.io:", tonUsdRes.status);
         if (!tonUsdRes.ok) {
-          throw new Error(`Error API tonapi.io: ${tonUsdRes.status}`);
+          throw new Error(Error API tonapi.io: ${tonUsdRes.status});
         }
 
         const tonUsdJson = await tonUsdRes.json();
@@ -453,6 +454,10 @@
           const changeUsd = priceUsd - lastPrice;
           const changePercent = ((priceUsd - lastPrice) / lastPrice * 100).toFixed(2);
           const direction = changeUsd > 0 ? '+' : '';
+          new Notification('UBX Price Update', {
+            body: Current: $${priceUsd.toFixed(6)}\nPrevious: $${lastPrice.toFixed(6)}\nChange: ${direction}$${Math.abs(changeUsd).toFixed(6)} (${direction}${changePercent}%),
+            icon: '/ico.png'
+          });
         }
 
         priceElem.textContent = priceUsd.toFixed(6) + " USD";
@@ -475,7 +480,7 @@
         priceElem.textContent = "Error loading";
         priceElem.style.color = "#f87171";
         changeElem.textContent = "";
-        console.error("Error in fetchData:", e);
+        console.error("Ошибка в fetchData:", e);
       }
     }
 
@@ -527,7 +532,7 @@
       }
       draw(ctx) {
         ctx.beginPath();
-        ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
+        ctx.fillStyle = rgba(255, 255, 255, ${this.alpha});
         ctx.shadowColor = 'white';
         ctx.shadowBlur = 4 * this.alpha;
         ctx.arc(this.x, this.y, this.z, 0, Math.PI * 2);
@@ -602,7 +607,7 @@
       mouseY = e.clientY;
     });
 
-    // --- Rocket ---
+    // --- Ракета ---
     const rocket = document.getElementById('rocket');
     let isLaunching = false;
 
@@ -636,51 +641,5 @@
 
   gtag('config', 'G-ZLTXQRVTMS');
 </script>
-  <!-- Firebase Core -->
-<script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-app-compat.js"></script>
-<!-- Firebase Messaging -->
-<script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-messaging-compat.js"></script>
-
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyA0jTDzGLMdh7UAh6VE07k2KYbV_ftQnQA",
-    authDomain: "umbriox-df07e.firebaseapp.com",
-    projectId: "umbriox-df07e",
-    storageBucket: "umbriox-df07e.firebasestorage.app",
-    messagingSenderId: "239289752920",
-    appId: "1:239289752920:web:0cef4c6d1ecaa60c3c192d",
-    measurementId: "G-F10JP8XXYC"
-  };
-
-  firebase.initializeApp(firebaseConfig);
-</script>
-  <script>
-  const messaging = firebase.messaging();
-
-  messaging.requestPermission()
-    .then(() => {
-      return messaging.getToken({
-        vapidKey: 'BE8kdzFbXU6oeMDcC5Tj-xJ_6Gd5Nq82Car5rlBTVBKrukHUO6WN9b26Sb-jq0yadFvZ627xJZL0tHaTDwJ4hp8'
-      });
-    })
-    .then((token) => {
-      console.log('Firebase Push Token:', token);
-    })
-    .catch((err) => {
-      console.error('Error push-noti:', err);
-    });
-
-  messaging.onMessage((payload) => {
-    console.log("Entered push-noti:", payload);
-    const { title, body } = payload.notification;
-    new Notification(title, {
-      body: body,
-      icon: '/ico.png'
-    });
-  });
-</script>
-  <!-- Firebase Core и Messaging -->
-<script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-messaging-compat.js"></script>
 </body>
 </html>
