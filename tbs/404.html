@@ -6,112 +6,92 @@
 <title>404 - UmbrioX</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
-
-  body, html {
-    margin: 0; padding: 0; height: 100%;
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
     background: radial-gradient(circle at center, #000000 0%, #040810 90%);
     color: #ddd;
     font-family: 'Orbitron', sans-serif;
     overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    user-select: none;
+  }
+
+  canvas.starfield {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    pointer-events: none;
   }
 
   .container {
+    z-index: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content:center;
+    height: 100vh;
     text-align: center;
-    max-width: 700px;
     padding: 1rem;
   }
 
-  .text-top {
-    font-size: 1.3rem;
-    margin-bottom: 1rem;
+  .text-top, .text-bottom {
+    max-width: 600px;
     color: #8ab4f8;
-    text-shadow:
-      1px 1px 2px #0a0a0a,
-      -1px -1px 2px #4f46e5;
+    text-shadow: 1px 1px 2px #0a0a0a, -1px -1px 2px #4f46e5;
+    margin: 0.5rem 0;
   }
+
   .text-bottom {
-    font-size: 1.1rem;
-    margin-bottom: 4rem;
     color: #a1a1a1;
-    text-shadow:
-      1px 1px 2px #0a0a0a,
-      -1px -1px 2px #4f46e5;
+    font-size: 1.1rem;
+  }
+
+  .black-hole-wrapper {
+    position: relative;
+    width: 240px;
+    height: 240px;
+    margin: 2rem auto;
   }
 
   .black-hole {
-    position: relative;
-    width: 220px;
-    height: 220px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
-    background:
-      radial-gradient(circle at center, #000000 70%, #090a0f 85%, transparent 95%);
-    box-shadow:
-      inset 0 0 40px #0f0f10,
-      0 0 60px 10px #2c2c7d,
-      0 0 100px 25px #3b3b9f;
-    margin: 0 auto 3rem auto;
+    background: radial-gradient(circle at center, #000000 70%, #090a0f 85%, transparent 95%);
+    box-shadow: inset 0 0 40px #0f0f10, 0 0 60px 10px #2c2c7d, 0 0 100px 25px #3b3b9f;
   }
 
   .digits-container {
     position: absolute;
-    top: 50%; left: 50%;
-    width: 180px;
-    height: 180px;
-    margin-left: -90px;
-    margin-top: -90px;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
     pointer-events: none;
   }
 
   .digit {
     position: absolute;
     font-weight: 900;
-    font-size: 4rem;
+    font-size: 3.5rem;
     color: #7e22ce;
     text-shadow: 0 0 12px #a855f7, 0 0 25px #9333ea;
     filter: url(#distortion);
-    user-select: none;
+    opacity: 0;
   }
 
-  @keyframes flyAround {
-    0% { transform: rotate(0deg) translateX(90px) rotate(0deg); }
-    100% { transform: rotate(360deg) translateX(90px) rotate(-360deg); }
-  }
-
-  @keyframes flyAroundReverse {
-    0% { transform: rotate(360deg) translateX(90px) rotate(-360deg); }
-    100% { transform: rotate(0deg) translateX(90px) rotate(0deg); }
-  }
-
-  .digit4-left {
-    top: 50%; left: 50%;
-    animation: flyAround 14s linear infinite;
-    animation-delay: 0s;
-  }
-
-  .digit0 {
-    top: 50%; left: 50%;
-    animation: flyAroundReverse 18s linear infinite;
-    animation-delay: 4s;
-  }
-
-  .digit4-right {
-    top: 50%; left: 50%;
-    animation: flyAround 16s linear infinite;
-    animation-delay: 8s;
-  }
-
-  /* Кнопки */
   .btn-group {
-    margin-top: 1rem;
+    margin-top: 2rem;
     display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
     justify-content: center;
-    gap: 1.2rem;
   }
+
   .btn {
     cursor: pointer;
     padding: 0.75rem 1.6rem;
@@ -122,90 +102,155 @@
     color: white;
     font-family: 'Orbitron', sans-serif;
     box-shadow: 0 4px 20px #4f46e5;
-    transition: background 0.3s ease;
+    transition: 0.3s;
     user-select: none;
     min-width: 140px;
   }
+
   .btn:hover {
     background: linear-gradient(90deg, #7e22ce, #4f46e5);
   }
-
-  .black-hole-wrapper {
-    position: relative;
-    width: 220px;
-    height: 220px;
-    margin: 0 auto;
-  }
-      .marquee-container { /Release
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  overflow: hidden;
-  background: rgba(0, 0, 0, 0.7);
-  z-index: 10;
-  height: 40px;
-  display: flex;
-  align-items: center;
-}
-
-.marquee {
-  display: inline-block;
-  white-space: nowrap;
-  font-size: 1.5rem;
-  font-weight: bold;
-  background-image: linear-gradient(90deg, #7e22ce, #4f46e5, #0ea5e9, #38bdf8, #7e22ce);
-  background-size: 300%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: galaxy-shimmer 4s infinite linear, marquee 15s linear infinite;
-  padding-right: 100%;
-}
-
-
-@keyframes marquee {
-  0% {
-    transform: translateX(100%);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-} /* Release
 </style>
 </head>
 <body>
-<div class="marquee-container">
-  <span class="marquee">Oh, that's a mistake, well try something else</span>
-</div>
-<div class="container" role="main" aria-label="404 Error page">
-  <div class="text-top" aria-label="English explanation">
-    You accidentally put the wrong sign after the link, you can go to (the English version of the site or update) below
-  </div>
 
-  <div class="black-hole-wrapper" aria-hidden="true">
+<canvas class="starfield" id="starCanvas"></canvas>
+
+<div class="container">
+  <div class="text-top">You accidentally entered the wrong link, but you can go back below:</div>
+  <div class="black-hole-wrapper">
     <div class="black-hole"></div>
-    <div class="digits-container" aria-hidden="true">
-      <div class="digit digit4-left" style="transform-origin: center left;">4</div>
-      <div class="digit digit0" style="transform-origin: center left;">0</div>
-      <div class="digit digit4-right" style="transform-origin: center left;">4</div>
+    <div class="digits-container">
+      <div class="digit" id="d4a">4</div>
+      <div class="digit" id="d0">0</div>
+      <div class="digit" id="d4b">4</div>
     </div>
   </div>
-
   <div class="btn-group">
-    <button class="btn" onclick="window.location.href='https://umbriox.pp.ua/'" aria-label="Go to English version">Return to site (EN)</button>
-    <button class="btn" onclick="window.location.href='https://umbriox.pp.ua/tbs/'" aria-label="TBS">Burn a TON!</button>
-    <button class="btn" onclick="window.location.href='https://umbriox.pp.ua/a/'" aria-label="Creators">Creators</button>
-    <button class="btn" onclick="location.reload()" aria-label="Update Site">Update site</button>
+    <button class="btn" onclick="window.location.href='https://umbriox.pp.ua/'">Return to site (EN)</button>
+    <button class="btn" onclick="window.location.href='https://umbriox.pp.ua/tbs/'">Burn a TON!</button>
+    <button class="btn" onclick="window.location.href='https://umbriox.pp.ua/a/'">Creators</button>
+    <button class="btn" onclick="location.reload()">Update site</button>
   </div>
 </div>
 
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" aria-hidden="true" style="position:absolute;width:0;height:0;">
-  <filter id="distortion" x="0" y="0" width="100%" height="100%">
+<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;" aria-hidden="true">
+  <filter id="distortion">
     <feTurbulence id="turbulence" baseFrequency="0.03" numOctaves="2" result="turbulence"/>
     <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="6" xChannelSelector="R" yChannelSelector="G"/>
     <animate xlink:href="#turbulence" attributeName="baseFrequency" dur="7s" values="0.02;0.05;0.02" repeatCount="indefinite"/>
   </filter>
 </svg>
 
+<script>
+// --- Stars ---
+const canvas = document.getElementById('starCanvas');
+const ctx = canvas.getContext('2d');
+
+function rand(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+let stars = [];
+const STAR_COUNT = 200;
+
+function createStar() {
+  const edge = Math.floor(rand(0, 4)); // 0=left, 1=top, 2=right, 3=bottom
+  let x, y;
+  switch (edge) {
+    case 0: x = -5; y = rand(0, canvas.height); break;
+    case 1: x = rand(0, canvas.width); y = -5; break;
+    case 2: x = canvas.width + 5; y = rand(0, canvas.height); break;
+    case 3: x = rand(0, canvas.width); y = canvas.height + 5; break;
+  }
+
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  const dx = cx - x;
+  const dy = cy - y;
+  const dist = Math.hypot(dx, dy);
+  const speed = rand(0.3, 0.8);
+  const vx = dx / dist * speed;
+  const vy = dy / dist * speed;
+
+  return { x, y, vx, vy, z: rand(0.3, 1), opacity: 1 };
+}
+
+function resetStars() {
+  stars = [];
+  for (let i = 0; i < STAR_COUNT; i++) {
+    stars.push(createStar());
+  }
+}
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  resetStars();
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+function drawStars() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  for (let star of stars) {
+    star.x += star.vx;
+    star.y += star.vy;
+
+    const dx = canvas.width / 2 - star.x;
+    const dy = canvas.height / 2 - star.y;
+    const dist = Math.hypot(dx, dy);
+
+    if (dist < 20) {
+      star.opacity -= 0.04;
+      if (star.opacity <= 0) Object.assign(star, createStar());
+    }
+
+    ctx.fillStyle = `rgba(255,255,255,${star.opacity})`;
+    ctx.beginPath();
+    ctx.arc(star.x, star.y, star.z, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  requestAnimationFrame(drawStars);
+}
+drawStars();
+</script>
+
+<script>
+// 404
+const digits = [
+  {el:document.getElementById('d4a'), angle: -30},
+  {el:document.getElementById('d0'), angle: 90},
+  {el:document.getElementById('d4b'), angle: 210}
+];
+
+digits.forEach((d, i) => {
+  setTimeout(() => {
+    d.el.style.opacity = 1;
+    d.el.style.transformOrigin = '50% 50%';
+    d.el.style.transition = 'transform 2s ease-out, opacity 1s';
+    d.el.style.transform = `rotate(${d.angle}deg) translateX(160px) rotate(${-d.angle}deg)`;
+
+    setTimeout(() => {
+      // Убираем transition, включаем бесконечную анимацию вращения через JS
+      d.el.style.transition = 'none';
+
+      let start = null;
+      const duration = 14000;
+      function rotateLoop(timestamp) {
+        if (!start) start = timestamp;
+        const elapsed = (timestamp - start) % duration;
+        const rotation = d.angle + (elapsed / duration) * 360;
+        d.el.style.transform = `rotate(${rotation}deg) translateX(160px) rotate(${-rotation}deg)`;
+        requestAnimationFrame(rotateLoop);
+      }
+      requestAnimationFrame(rotateLoop);
+    }, 2100);
+  }, i * 500 + 500);
+});
+</script>
 </body>
 </html>
+

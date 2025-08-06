@@ -176,8 +176,7 @@
       color: white;
     }
     
-.marquee-container { /Release
-  position: fixed;
+.marquee-container {
   top: 0;
   left: 0;
   width: 100%;
@@ -212,8 +211,6 @@
   }
 } /* Release
   </style>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>UmbrioX (᪣UBX) - New cryptocurrency of the future</title>
   <meta name="description" content="UmbrioX (᪣UBX) - innovative cryptocurrency on TON. Invest in the future with fast transactions and high security. Find out the price of UBX and join!" />
   <meta name="keywords" content="UmbrioX, ᪣, UBX, cryptocurrency, TON, investments, blockchain, DeDust" />
@@ -261,14 +258,14 @@
       <canvas id="chart"></canvas>
     </div>
     <div class="about">
-      <h2 style="color: #d8b4fe; font-size: 1.75rem;">О UmbrioX</h2>
+      <h2 style="color: #d8b4fe; font-size: 1.75rem;">About UmbrioX</h2>
       <p>UmbrioX is a cryptocurrency of a new era. It is created for those who are ready to go beyond the ordinary and explore the financial horizons of the future. The symbol ᪣ represents the mystery of this world.</p>
       <p>UmbrioX (UBX), launched in 2025, offers reliable and fast transactions, scalability, and protection from quantum threats.</p>
       <p>Support the development of the UmbrioX ecosystem and join our space journey!</p>
     </div>
   </div>
   <div id="priceNotification">
-    <p>Stay updated with UBX price changes via notifications! Get real-time alerts when the price goes up or down.</p>
+    <p>Stay updated with UBX price changes via notifications! Get real-time alerts when the price goes up or down. <a href="https://t.me/umbriox/22" target="_blank">About</a></p>
     <button id="allowBtn">Allow</button>
     <button id="closeBtn">Close</button>
   </div>
@@ -355,19 +352,19 @@
       chart.update();
     }
 
-    function getCookie(name) {
-      const value = ; ${document.cookie};
-      const parts = value.split(; ${name}=);
-      if (parts.length === 2) return parts.pop().split(';').shift();
-      return null;
-    }
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+  return null;
+}
 
-    function setCookie(name, value, days) {
-      const date = new Date();
-      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-      const expires = expires=${date.toUTCString()};
-      document.cookie = ${name}=${value};${expires};path=/;
-    }
+function setCookie(name, value, days) {
+  const date = new Date();
+  date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+  const expires = `expires=${date.toUTCString()}`;
+  document.cookie = `${name}=${value};${expires};path=/`;
+}
 
     const notificationPopup = document.getElementById('priceNotification');
     const allowBtn = document.getElementById('allowBtn');
@@ -411,7 +408,7 @@
         const dedustRes = await fetch(DEDUST_API);
         console.log("Status DeDust API:", dedustRes.status);
         if (!dedustRes.ok) {
-          throw new Error(Error API DeDust: ${dedustRes.status});
+          throw new Error(`Error API DeDust: ${dedustRes.status}`);
         }
 
         const pools = await dedustRes.json();
@@ -429,7 +426,7 @@
         const tonUsdRes = await fetch(TON_USD_API);
         console.log("Status tonapi.io:", tonUsdRes.status);
         if (!tonUsdRes.ok) {
-          throw new Error(Error API tonapi.io: ${tonUsdRes.status});
+        throw new Error(`Error API tonapi.io: ${tonUsdRes.status}`);
         }
 
         const tonUsdJson = await tonUsdRes.json();
@@ -454,8 +451,8 @@
           const changePercent = ((priceUsd - lastPrice) / lastPrice * 100).toFixed(2);
           const direction = changeUsd > 0 ? '+' : '';
           new Notification('UBX Price Update', {
-            body: Current: $${priceUsd.toFixed(6)}\nPrevious: $${lastPrice.toFixed(6)}\nChange: ${direction}$${Math.abs(changeUsd).toFixed(6)} (${direction}${changePercent}%),
-            icon: '/ico.png'
+          body: `Current: $${priceUsd.toFixed(6)}\nPrevious: $${lastPrice.toFixed(6)}\nChange: ${direction}$${Math.abs(changeUsd).toFixed(6)} (${direction}${changePercent}%)`,
+          icon: '/ico.png'
           });
         }
 
@@ -479,132 +476,111 @@
         priceElem.textContent = "Error loading";
         priceElem.style.color = "#f87171";
         changeElem.textContent = "";
-        console.error("Ошибка в fetchData:", e);
+        console.error("Error in fetchData:", e);
       }
     }
 
     fetchData();
     setInterval(fetchData, 10000);
 
-    // --- Animation Star ---
-    const starCanvas = document.querySelector('.starfield');
-    const ctxStar = starCanvas.getContext('2d');
+// --- Animation Star ---
+  const starCanvas = document.querySelector('.starfield');
+  const ctxStar = starCanvas.getContext('2d');
 
-    function randomRange(min, max) {
-      return Math.random() * (max - min) + min;
+  function randomRange(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
+  class Star {
+    constructor() {
+      this.reset(true);
     }
+    reset(init = false) {
+      this.x = Math.random() * window.innerWidth;
+      this.y = Math.random() * window.innerHeight;
+      this.z = randomRange(0.5, 2.5);
+      this.alpha = init ? randomRange(0, 1) : 0;
+      this.alphaChange = randomRange(0.002, 0.007);
+      this.fadingIn = true;
+    }
+    update(dx, dy) {
+      this.x += dx * this.z;
+      this.y += dy * this.z;
 
-    class Star {
-      constructor() {
-        this.reset(true);
-      }
-      reset(init = false) {
-        this.x = Math.random() * window.innerWidth;
-        this.y = Math.random() * window.innerHeight;
-        this.z = randomRange(0.5, 2.5);
-        this.alpha = init ? randomRange(0, 1) : 0;
-        this.alphaChange = randomRange(0.002, 0.007);
-        this.fadingIn = true;
-      }
-      update(dx, dy, gyroActive) {
-        if (gyroActive) {
-          this.x += dx * this.z;
-          this.y += dy * this.z;
+      if (this.x < 0) this.x = window.innerWidth;
+      if (this.x > window.innerWidth) this.x = 0;
+      if (this.y < 0) this.y = window.innerHeight;
+      if (this.y > window.innerHeight) this.y = 0;
+
+      if (this.fadingIn) {
+        this.alpha += this.alphaChange;
+        if (this.alpha >= 1) {
+          this.alpha = 1;
+          this.fadingIn = false;
         }
-        if (this.x < 0) this.x = window.innerWidth;
-        if (this.x > window.innerWidth) this.x = 0;
-        if (this.y < 0) this.y = window.innerHeight;
-        if (this.y > window.innerHeight) this.y = 0;
-        if (this.fadingIn) {
-          this.alpha += this.alphaChange;
-          if (this.alpha >= 1) {
-            this.alpha = 1;
-            this.fadingIn = false;
-          }
-        } else {
-          this.alpha -= this.alphaChange;
-          if (this.alpha <= 0) {
-            this.alpha = 0;
-            this.reset();
-          }
-        }
-      }
-      draw(ctx) {
-        ctx.beginPath();
-        ctx.fillStyle = rgba(255, 255, 255, ${this.alpha});
-        ctx.shadowColor = 'white';
-        ctx.shadowBlur = 4 * this.alpha;
-        ctx.arc(this.x, this.y, this.z, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      }
-    }
-
-    const stars = [];
-    const starCount = 200;
-
-    for (let i = 0; i < starCount; i++) {
-      stars.push(new Star());
-    }
-
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-
-    function resizeStarCanvas() {
-      starCanvas.width = window.innerWidth;
-      starCanvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resizeStarCanvas);
-    resizeStarCanvas();
-
-    let gyroX = null;
-    let gyroY = null;
-    let gyroActive = false;
-    let gyroLastUpdate = Date.now();
-
-    function isGyroMoving(gx, gy) {
-      return Math.abs(gx - (gyroX ?? gx)) > 0.1 || Math.abs(gy - (gyroY ?? gy)) > 0.1;
-    }
-
-    window.addEventListener('deviceorientation', event => {
-      const gx = event.gamma || 0;
-      const gy = event.beta || 0;
-      if (gyroX === null) {
-        gyroX = gx;
-        gyroY = gy;
-        gyroActive = false;
       } else {
-        if (isGyroMoving(gx, gy)) {
-          gyroActive = true;
-          gyroLastUpdate = Date.now();
-          gyroX = gx;
-          gyroY = gy;
-        } else {
-          if (Date.now() - gyroLastUpdate > 1500) {
-            gyroActive = false;
-          }
+        this.alpha -= this.alphaChange;
+        if (this.alpha <= 0) {
+          this.alpha = 0;
+          this.reset();
         }
       }
-      mouseX = gx * 10 + window.innerWidth / 2;
-      mouseY = gy * 10 + window.innerHeight / 2;
-    });
-
-    function animateStars() {
-      ctxStar.clearRect(0, 0, starCanvas.width, starCanvas.height);
-      const dx = (mouseX - window.innerWidth / 2) * 0.001;
-      const dy = (mouseY - window.innerHeight / 2) * 0.001;
-      stars.forEach(star => {
-        star.update(dx, dy, gyroActive || true);
-        star.draw(ctxStar);
-      });
-      requestAnimationFrame(animateStars);
     }
-    animateStars();
+    draw(ctx) {
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
+      ctx.shadowColor = 'white';
+      ctx.shadowBlur = 4 * this.alpha;
+      ctx.arc(this.x, this.y, this.z, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+  }
 
-    document.addEventListener('mousemove', e => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
+  const stars = [];
+  const starCount = 200;
+
+  for (let i = 0; i < starCount; i++) {
+    stars.push(new Star());
+  }
+
+  let inputMode = 'mouse';
+  let dx = 0;
+  let dy = 0;
+
+  function resizeStarCanvas() {
+    starCanvas.width = window.innerWidth;
+    starCanvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resizeStarCanvas);
+  resizeStarCanvas();
+
+  document.addEventListener('mousemove', (e) => {
+    inputMode = 'mouse';
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    dx = (e.clientX - centerX) * 0.001;
+    dy = (e.clientY - centerY) * 0.001;
+  });
+
+  window.addEventListener('deviceorientation', (event) => {
+    if (event.gamma !== null && event.beta !== null) {
+      inputMode = 'gyro';
+      dx = event.gamma * 0.05;
+      dy = event.beta * 0.05;
+    }
+  });
+
+  function animateStars() {
+    ctxStar.clearRect(0, 0, starCanvas.width, starCanvas.height);
+    stars.forEach((star) => {
+      star.update(dx, dy);
+      star.draw(ctxStar);
     });
+    requestAnimationFrame(animateStars);
+  }
+
+  animateStars();
 
     // --- Rocket ---
     const rocket = document.getElementById('rocket');
