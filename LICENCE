@@ -1,82 +1,125 @@
-B*HD Wallet License (BWL)
-Version 1.0, 2025
+# 📜 B*HD Wallet License (BWL)
+**Version 1.0 — 2025**  
+**Issued by B*HD™**
 
-Copyright © 2019–2025 B*HD™
-Founded: 2019
-License Issued: 2025
+```
+Copyright © 2019–2025 B*HD™  
+Founded: 2019  
+License Issued: 2025  
+```
 
-Certified by:
-OOO Kripto
+### ✅ Certified by:
 
-OOO Sertifi
+- OOO Kripto  
+- OOO Sertifi  
+- Google Drive  
+- Google Certificate  
+- Google  
+- GitHub  
+- GitHub License  
+- GitHub Site  
 
-Google Drive
+> **All rights reserved to Sliz™**
 
-Google Certificate
+---
 
-Google
+## 1. 🎯 License Scope & Use
 
-GitHub
+This license grants **limited rights** for the use and integration of the software referred to as `WM*M` (Wallet MetaMask), **only** within the **BHD™ cryptocurrency infrastructure**.
 
-GitHub License
+**Permitted use:**
+- Integration with BHD blockchain systems  
+- Development/support of WM*M-related services for BHD
 
-GitHub Site
+**Forbidden use:**
+- Any activity outside the official BHD system  
+- Unauthorized personal or external usage
 
-All rights reserved to Sliz™. This license grants limited rights for the use and integration of the software referred to as WM*M (Wallet MetaMask), subject to the following terms and conditions:
+> ❌ Unauthorized use = **breach of contract**
 
-1. License Scope & Use
-This software and related components may be used, modified, and distributed under this license for purposes relating to blockchain integration, primarily WM*M for the BHD cryptocurrency platform. This license only applies when configuring or supporting WM*M for the BHD cryptocurrency server.
+---
 
-Use of this software for any other purpose or outside of company-authorized context is strictly forbidden and will be considered a breach of contract.
+## 2. ⚖️ Legal Restrictions & Penalties
 
-2. Legal Restrictions & Penalties
-2.1 Intentional Interference or Sabotage
-Any intentional act of interference, sabotage, degradation, obstruction, or deliberate harm to the functionality, performance, or security of the cryptocurrency system, including the WM*M interface, will lead to:
+### 2.1 🧨 Intentional Interference or Sabotage
 
-Criminal prosecution under applicable cybercrime laws.
+Any action meant to damage or disrupt the system (including WM*M) will result in:
 
-Immediate termination of employment or contract.
+```
+• Criminal prosecution  
+• Immediate termination  
+• Fine: ₴15,000  
+• Legal action (criminal + administrative)
+```
 
-Monetary fine of 15,000 UAH (₴).
+---
 
-Legal charges filed in both criminal and administrative courts.
+### 2.2 🛑 Unauthorized Actions
 
-2.2 Unauthorized Actions
-Any unauthorized modification, update, reconfiguration, or external integration of WM*M or related systems without prior written consent of the Administrator will result in:
+Unauthorized changes or external integrations without written permission will result in:
 
-Monetary fine of 1,000 UAH (₴).
+```
+• Fine: ₴1,000  
+• Immediate termination
+```
 
-Immediate termination of employment or contract.
+---
 
-2.3 Failure to Maintain Service
-Neglect or refusal to maintain, support, or configure WM*M, including any disruption to wallet connection or transactional stability, will result in:
+### 2.3 ⚙️ Failure to Maintain Service
 
-Monetary fine of 2,500 UAH (₴).
+Neglect of duties (e.g., downtime, misconfiguration, disconnects) will result in:
 
-Potential criminal case initiation depending on severity.
+```
+• Fine: ₴2,500  
+• Potential criminal investigation (depending on severity)
+```
 
-3. Equal Treatment Policy
-Regardless of any personal, familial, or friendly relationship between involved parties, no special exceptions shall be made. All team members, employees, contractors, and partners are subject to the full legal and financial liability outlined above.
+---
 
-4. Liability and Risk Acceptance
-Upon signing a contract, accepting a position, or agreeing to work with the company in the capacity of developer, engineer, or system configurator, you fully acknowledge and accept:
+## 3. 🤝 Equal Treatment Policy
 
-All legal responsibilities as outlined.
+No matter your relationship to the company (family, friend, etc.) — **no exceptions**.  
+All participants are **fully liable** under this license.
 
-That all risks associated with misconfiguration or damage to the WM*M system will be transferred to you personally.
+---
 
-That in case of irreparable harm to the system, additional legal consequences may be applied beyond monetary fines.
+## 4. ⚠️ Liability & Risk Acceptance
 
-5. Confirmation of Agreement
-By accepting employment, freelancing, or voluntary contribution to the B*HD™ system involving the WM*M configuration or any crypto-related services, you confirm that you have read, understood, and agree to all the terms listed above.
+By joining the system (job, freelance, volunteering), you **accept**:
 
-This license functions as a binding digital contract upon engagement in any technical or software activity under B*HD's infrastructure.
+- All outlined legal responsibilities  
+- Full personal risk in case of system damage  
+- That severe cases may involve **additional legal consequences**
 
-6. Disclaimer & No Warranty Clause
-The software is provided "as is", without warranty of any kind, express or implied. In no event shall B*HD™ be liable for any damages, financial losses, or system errors resulting from the use or misuse of the software.
+---
 
-Contact
-For more information or reporting incidents, contact:
-📧 markd.voznyuk@gmail.com
-📞 +380-66-876-66-70
-🌐 umbriox.pp.ua
+## 5. ✅ Confirmation of Agreement
+
+By working on WM*M in any capacity, you **confirm** that you:
+
+- Have **read** the license  
+- **Understand** all terms  
+- **Agree** to abide by them
+
+> This document functions as a **binding digital contract**
+
+---
+
+## 6. ❗ Disclaimer & No Warranty
+
+The software is provided **"as is"**, with **no warranties** of any kind.
+
+> B*HD™ shall not be liable for:
+> - Data loss  
+> - Financial damage  
+> - Misuse or misconfiguration
+
+---
+
+## 📬 Contact
+
+```
+Email: markd.voznyuk@gmail.com  
+Phone: +380-66-876-66-70  
+Website: https://umbriox.pp.ua
+```
